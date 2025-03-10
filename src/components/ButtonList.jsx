@@ -20,7 +20,7 @@ const btnList = [
 
 const ButtonList = () => {
   return (
-    <div className="flex">
+    <div className="flex overflow-hidden">
       {btnList.map((btn, btnIdx) => (
         <Button key={btnIdx} name={btn} />
       ))}
