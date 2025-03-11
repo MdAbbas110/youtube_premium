@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { YOUTUBE_VIDEOS_API } from "../utils/constants";
+import { YOUTUBE_SEARCH_API, YOUTUBE_VIDEOS_API } from "../utils/constants";
 import VideoCard from "./VideoCard";
 import { Link } from "react-router-dom";
 
@@ -16,7 +16,6 @@ const VideoContainer = () => {
       const json = await data.json();
 
       setVideos(json.items);
-      console.log(videos);
     } catch (error) {
       console.log(error);
     }
@@ -25,8 +24,8 @@ const VideoContainer = () => {
   return (
     <div className="flex flex-wrap flex-flow ">
       {videos.map((video) => (
-        <Link to={`/watch?v=${video.id}`}>
-          <VideoCard key={video.id} info={video} />
+        <Link key={video.id} to={`/watch?v=${video.id}`}>
+          <VideoCard info={video} />
         </Link>
       ))}
     </div>

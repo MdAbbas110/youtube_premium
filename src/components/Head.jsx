@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
 import { toggleMenu } from "../utils/appSlice";
 import { Menu, SearchSlash, User, Youtube } from "lucide-react";
 
 const Head = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {}, [searchQuery]);
+
   const dispatch = useDispatch();
   const toggleMenuHandler = () => {
     dispatch(toggleMenu());
@@ -21,7 +25,9 @@ const Head = () => {
       </div>
       <div className="col-span-10 flex items-center justify-center ">
         <input
+          onChange={(e) => setSearchQuery(e.target.value)}
           className="w-1/2 border border-gray-400 rounded-l-full p-2 "
+          placeholder="Search"
           type="text"
         />
         <div className="rounded-r-full border-r border-t border-b px-5 py-2 bg-gray-100 border-gray-400">
