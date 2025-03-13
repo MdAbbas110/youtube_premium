@@ -1,26 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { YOUTUBE_SEARCH_API, YOUTUBE_VIDEOS_API } from "../utils/constants";
+
 import VideoCard from "./VideoCard";
 import { Link } from "react-router-dom";
+import { useVideosList } from "../hooks/useVideosList";
 
 const VideoContainer = () => {
-  const [videos, setVideos] = useState([]);
+  const videos = useVideosList();
 
-  useEffect(() => {
-    getVideos();
-  }, []);
-
-  const getVideos = async () => {
-    try {
-      const data = await fetch(YOUTUBE_VIDEOS_API);
-      const json = await data.json();
-
-      setVideos(json.items);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
+  if (!videos) return <div>Loading...</div>;
   return (
     <div className="flex flex-wrap flex-flow ">
       {videos.map((video) => (

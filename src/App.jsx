@@ -6,6 +6,7 @@ import Body from "./components/Body";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import MainContainer from "./components/MainContainer";
 import WatchPage from "./components/WatchPage";
+import { ErrorBoundary } from "react-error-boundary";
 
 const appRouter = createBrowserRouter([
   {
@@ -28,7 +29,9 @@ function App() {
   return (
     <Provider store={store}>
       <div>
-        <Head />
+        <ErrorBoundary fallback={"something went wrong"}>
+          <Head />
+        </ErrorBoundary>
         <RouterProvider router={appRouter} />
       </div>
     </Provider>

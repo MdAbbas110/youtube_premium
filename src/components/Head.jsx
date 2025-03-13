@@ -3,11 +3,40 @@ import { useDispatch } from "react-redux";
 
 import { toggleMenu } from "../utils/appSlice";
 import { Menu, SearchSlash, User, Youtube } from "lucide-react";
+import { useSearchVideos } from "../hooks/useSearchVideos";
+import { GOOGLE_API_KEY } from "../utils/constants";
 
 const Head = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [suggestion, setSuggestion] = useState([]);
 
-  useEffect(() => {}, [searchQuery]);
+  // const videos = useSearchVideos(searchQuery);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      getSearchSuggestions();
+    }, 2000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [searchQuery]);
+
+  const getSearchSuggestions = async () => {
+    console.log("API CAll -" + searchQuery);
+
+    try {
+      const data = await fetch(
+        `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&q=${searchQuery}&type=video&key=${GOOGLE_API_KEY}`
+      );
+      const json = await data.json();
+      setSuggestion(json.items || []);
+      console.log(json.items);
+    } catch (error) {
+      console.error("Error fetching search suggestions:", error);
+      setSuggestion([]);
+    }
+  };
 
   const dispatch = useDispatch();
   const toggleMenuHandler = () => {
@@ -23,15 +52,31 @@ const Head = () => {
           <p className="text-lg ml-1 font-semibold">Premium</p>
         </span>
       </div>
-      <div className="col-span-10 flex items-center justify-center ">
-        <input
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-1/2 border border-gray-400 rounded-l-full p-2 "
-          placeholder="Search"
-          type="text"
-        />
-        <div className="rounded-r-full border-r border-t border-b px-5 py-2 bg-gray-100 border-gray-400">
-          <SearchSlash />
+      <div className="col-span-10 px-10 ">
+        <div>
+          <input
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-1/2 border border-gray-400 rounded-l-full p-2 "
+            placeholder="Search"
+            type="text"
+          />
+          <button className="rounded-r-full border px-5 py-2 bg-gray-100 border-gray-400">
+            🔍
+          </button>
+        </div>
+
+        <div className="fixed bg-white w-[36%] py-2 px-5 shadow-lg rounded-lg border border-gray-100">
+          <ul>
+            {suggestion &&
+              suggestion.map((s) => (
+                <li
+                  key={s.id.videoId}
+                  className="py-2 px-3 shadow-sm hover:bg-gray-100"
+                >
+                  🔍 {s.snippet.title.slice(0, 15) + "..."}
+                </li>
+              ))}
+          </ul>
         </div>
       </div>
       <div className="col-span-1 flex justify-end ">
