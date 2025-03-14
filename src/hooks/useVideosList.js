@@ -8,7 +8,7 @@ export const useVideosList = () => {
       try {
         const response = await fetch(YOUTUBE_VIDEOS_API);
         const data = await response.json();
-        setVideos(data.items);
+        setVideos(data.items || []);
       } catch (error) {
         console.log("Error fetching videos", error);
       }
